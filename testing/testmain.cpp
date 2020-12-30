@@ -82,6 +82,21 @@ static size_t CompressMiniz(const void* data, size_t size, int level = MZ_DEFAUL
 	return (size_t)resSize;
 }
 
+static size_t CompressSquishy(const void* data, size_t size)
+{
+	if (size == 0)
+		return 0;
+	FILE* fout = fopen("./tmp.bin", "wb");
+	fwrite(data, size, 1, fout);
+	fclose(fout);
+	system("../squishy/target/release/squishy -i ./tmp.bin -o ./tmp-o.bin > /dev/null");
+	FILE *fin = fopen("./tmp-o.bin", "rb");
+	fseek(fin, 0L, SEEK_END);
+	size_t ret = ftell(fin);
+	fclose(fin);
+	return ret;
+}
+
 static bool TestDecodingExistingSmolvFiles()
 {
 	const char* kFiles[] =
@@ -243,13 +258,14 @@ int main()
 	stm_setup();
 	smolv::Stats* stats = smolv::StatsCreate();
 
-	#define TEST_UNITY 1
-	#define TEST_TALOS 1
-	#define TEST_DOTA2 1
-	#define TEST_SHADERTOY 1
-	#define TEST_DXC 1
-	#define TEST_GLSLANG 1
-	#define TEST_SYNTHETIC 1
+	#define TEST_UNITY 0
+	#define TEST_TALOS 0
+	#define TEST_DOTA2 0
+	#define TEST_SHADERTOY 0
+	#define TEST_DXC 0
+	#define TEST_GLSLANG 0
+	#define TEST_SYNTHETIC 0
+	#define TEST_DOPE 1
 
 	// files we're testing on
 	const char* kFiles[] =
@@ -661,17 +677,165 @@ int main()
 		"synthetic/invalid-size-not-div4.spv",
 		"synthetic/invalid-optypearray-too-small-len.spv",
 		#endif // #if TEST_SYNTHETIC
+
+		#if TEST_DOPE
+		// Translated shaders dumped from dope on wax / logicoma
+		"dope/0.comp.spv",
+		"dope/0.frag.spv",
+		"dope/0.geom.spv",
+		"dope/0.vert.spv",
+		"dope/1.comp.spv",
+		"dope/1.frag.spv",
+		"dope/1.geom.spv",
+		"dope/1.vert.spv",
+		"dope/10.frag.spv",
+		"dope/10.vert.spv",
+		"dope/11.frag.spv",
+		"dope/11.geom.spv",
+		"dope/11.vert.spv",
+		"dope/12.frag.spv",
+		"dope/12.geom.spv",
+		"dope/12.vert.spv",
+		"dope/13.frag.spv",
+		"dope/13.geom.spv",
+		"dope/13.vert.spv",
+		"dope/14.frag.spv",
+		"dope/14.geom.spv",
+		"dope/14.vert.spv",
+		"dope/15.frag.spv",
+		"dope/15.geom.spv",
+		"dope/15.vert.spv",
+		"dope/16.frag.spv",
+		"dope/16.geom.spv",
+		"dope/16.vert.spv",
+		"dope/17.frag.spv",
+		"dope/17.geom.spv",
+		"dope/17.vert.spv",
+		"dope/18.frag.spv",
+		"dope/18.geom.spv",
+		"dope/18.vert.spv",
+		"dope/19.frag.spv",
+		"dope/19.geom.spv",
+		"dope/19.vert.spv",
+		"dope/2.comp.spv",
+		"dope/2.frag.spv",
+		"dope/2.geom.spv",
+		"dope/2.vert.spv",
+		"dope/20.frag.spv",
+		"dope/20.geom.spv",
+		"dope/20.vert.spv",
+		"dope/21.frag.spv",
+		"dope/21.geom.spv",
+		"dope/21.vert.spv",
+		"dope/22.frag.spv",
+		"dope/22.geom.spv",
+		"dope/22.vert.spv",
+		"dope/23.frag.spv",
+		"dope/23.vert.spv",
+		"dope/24.frag.spv",
+		"dope/24.vert.spv",
+		"dope/25.frag.spv",
+		"dope/25.vert.spv",
+		"dope/26.frag.spv",
+		"dope/26.vert.spv",
+		"dope/27.frag.spv",
+		"dope/27.vert.spv",
+		"dope/28.frag.spv",
+		"dope/28.vert.spv",
+		"dope/29.frag.spv",
+		"dope/29.vert.spv",
+		"dope/3.comp.spv",
+		"dope/3.frag.spv",
+		"dope/3.geom.spv",
+		"dope/3.vert.spv",
+		"dope/30.frag.spv",
+		"dope/30.vert.spv",
+		"dope/31.frag.spv",
+		"dope/31.vert.spv",
+		"dope/32.frag.spv",
+		"dope/32.vert.spv",
+		"dope/33.frag.spv",
+		"dope/33.vert.spv",
+		"dope/34.frag.spv",
+		"dope/34.vert.spv",
+		"dope/35.frag.spv",
+		"dope/35.vert.spv",
+		"dope/36.frag.spv",
+		"dope/36.vert.spv",
+		"dope/37.frag.spv",
+		"dope/37.vert.spv",
+		"dope/38.frag.spv",
+		"dope/38.vert.spv",
+		"dope/39.frag.spv",
+		"dope/39.vert.spv",
+		"dope/4.frag.spv",
+		"dope/4.geom.spv",
+		"dope/4.vert.spv",
+		"dope/40.frag.spv",
+		"dope/40.vert.spv",
+		"dope/41.frag.spv",
+		"dope/41.vert.spv",
+		"dope/42.frag.spv",
+		"dope/42.vert.spv",
+		"dope/43.frag.spv",
+		"dope/43.vert.spv",
+		"dope/44.frag.spv",
+		"dope/44.vert.spv",
+		"dope/45.frag.spv",
+		"dope/45.vert.spv",
+		"dope/46.frag.spv",
+		"dope/46.vert.spv",
+		"dope/47.frag.spv",
+		"dope/47.vert.spv",
+		"dope/48.frag.spv",
+		"dope/48.vert.spv",
+		"dope/49.frag.spv",
+		"dope/49.vert.spv",
+		"dope/5.frag.spv",
+		"dope/5.geom.spv",
+		"dope/5.vert.spv",
+		"dope/50.frag.spv",
+		"dope/50.vert.spv",
+		"dope/51.frag.spv",
+		"dope/51.geom.spv",
+		"dope/51.vert.spv",
+		"dope/52.frag.spv",
+		"dope/52.geom.spv",
+		"dope/52.vert.spv",
+		"dope/53.frag.spv",
+		"dope/53.geom.spv",
+		"dope/53.vert.spv",
+		"dope/54.frag.spv",
+		"dope/54.geom.spv",
+		"dope/54.vert.spv",
+		"dope/6.frag.spv",
+		"dope/6.geom.spv",
+		"dope/6.vert.spv",
+		"dope/7.frag.spv",
+		"dope/7.geom.spv",
+		"dope/7.vert.spv",
+		"dope/8.frag.spv",
+		"dope/8.geom.spv",
+		"dope/8.vert.spv",
+		"dope/9.frag.spv",
+		"dope/9.vert.spv",
+		"dope/comp.spv",
+		"dope/frag.spv",
+		"dope/geom.spv",
+		"dope/vert.spv",
+		#endif // #if TEST_DOPE
 	};
 
-	if (!TestDecodingExistingSmolvFiles())
+	/*if (!TestDecodingExistingSmolvFiles())
 	{
 		return 1;
-	}
+	}*/
 
 	// all test data lumped together, to check how well it compresses as a whole block
 	ByteArray spirvAll;
 	ByteArray spirvRemapAll[2];
 	ByteArray smolvAll[2];
+	ByteArray spltvAll;
 
 	uint64_t timeDecodeSmolv = 0;
 
@@ -790,12 +954,28 @@ int main()
 			break;
 		}
 
+		// Encode to splt-v
+		ByteArray spltv;
+		{
+			auto data = spirv.data();
+			auto size = spirv.size();
+			if (size != 0)
+			{
+				FILE* fout = fopen("./tmp.bin", "wb");
+				fwrite(data, size, 1, fout);
+				fclose(fout);
+				system("../splt-v/target/release/splt-v ./tmp.bin ./tmp-o.bin > /dev/null");
+				ReadFile("./tmp-o.bin", spltv);
+			}
+		}
+
 		// Append to "whole blob" arrays
 		spirvAll.insert(spirvAll.end(), spirv.begin(), spirv.end());
 		smolvAll[0].insert(smolvAll[0].end(), smolv.begin(), smolv.end());
 		smolvAll[1].insert(smolvAll[1].end(), smolvStripped.begin(), smolvStripped.end());
 		RemapSPIRV(spirv.data(), spirv.size(), false, spirvRemapAll[0]);
 		RemapSPIRV(spirv.data(), spirv.size(), true, spirvRemapAll[1]);
+		spltvAll.insert(spltvAll.end(), spltv.begin(), spltv.end());
 	}
 	
 	if (errorCount != 0)
@@ -814,16 +994,16 @@ int main()
 	printf("Time taken to decode SMOL-V:      %.1fms\n", stm_ms(timeDecodeSmolv));
 
 	// Compress various ways (as a whole blob) and print sizes
-	const char* kCompressorNames[] = { "<none>", "zlib", "LZ4 HC", "Zstandard", "Zstandard 20" };
-	const char* kDataNames[] = { "Raw", "Remapper", "SmolV" };
+	const char* kCompressorNames[] = { "<none>", "zlib", "LZ4 HC", "Zstandard", "Zstandard 20", "squishy" };
+	const char* kDataNames[] = { "Raw", "Remapper", "SmolV", "splt-v" };
 	for (int striptype = 0; striptype < 2; ++striptype)
 	{
 		printf("\nEvaluating %s...\n", striptype == 0 ? "Raw SPIR-V" : "SPIR-V with debug info stripped out");
 
-		for (int ctype = 0; ctype < 5; ++ctype)
+		for (int ctype = 0; ctype < 6; ++ctype)
 		{
 			printf("Compressed with %s:\n", kCompressorNames[ctype]);
-			for (int dtype = 0; dtype < 3; ++dtype)
+			for (int dtype = 0; dtype < 4; ++dtype)
 			{
 				const ByteArray* inputData = &spirvAll;
 				switch (dtype)
@@ -831,6 +1011,7 @@ int main()
 				case 0: inputData = &spirvAll; break;
 				case 1: inputData = &spirvRemapAll[striptype]; break;
 				case 2: inputData = &smolvAll[striptype]; break;
+				case 3: inputData = &spltvAll; break;
 				default: assert(false);
 				}
 
@@ -842,6 +1023,7 @@ int main()
 				case 2: size = CompressLZ4HC(inputData->data(), inputData->size()); break;
 				case 3: size = CompressZstd(inputData->data(), inputData->size()); break;
 				case 4: size = CompressZstd(inputData->data(), inputData->size(), 20); break;
+				case 5: size = CompressSquishy(inputData->data(), inputData->size()); break;
 				default: assert(false);
 				}
 
