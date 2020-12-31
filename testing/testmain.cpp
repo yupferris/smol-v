@@ -819,10 +819,6 @@ int main()
 		"dope/8.vert.spv",
 		"dope/9.frag.spv",
 		"dope/9.vert.spv",
-		"dope/comp.spv",
-		"dope/frag.spv",
-		"dope/geom.spv",
-		"dope/vert.spv",
 		#endif // #if TEST_DOPE
 	};
 
@@ -1027,7 +1023,7 @@ int main()
 				default: assert(false);
 				}
 
-				printf("%-10s %6.1fKB %5.1f%%\n", kDataNames[dtype], size / 1024.0f, (float)size / (float)(spirvAll.size())*100.0f);
+				printf("%-10s %6.1fKB (%8zuB) %5.1f%%\n", kDataNames[dtype], size / 1024.0f, size, (float)size / (float)(spirvAll.size())*100.0f);
 			}
 		}
 	}
